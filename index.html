@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css">
+    <title>Feliz Primaver</title>
+
+</head>
+<body>
+    <div class="container"></div>
+    <canvas id="canvas" width="500" height="600"></canvas>
+    <div class="poem-container">
+        <div>
+            <h1>Poema del dia</h1>
+                <p>
+                    Flor que al alba se despliega,<br>
+                    con su vestido de colores,<br>
+                    cada pétalo es un secreto,<br>
+                    un suspiro entre rumores.<br><br>
+
+                    En tu centro guarda el cielo,<br>
+                    todo el sol en un destello,<br>
+                    y en tus hojas hay un eco<br>
+                    del amor que lleva el viento.<br><br>
+
+                    Raíz profunda, firme y fiel,<br>
+                    que bebe la tierra en calma,<br>
+                    eres flor, eres un sueño,<br>
+                    una caricia para el alma.<br><br>
+
+                    En silencio te meces suave,<br>
+                    como un verso entre mis manos,<br>
+                    y al mirarte, flor serena,<br>
+                    la vida se siente cercana.<br><br>
+                </p>
+            </div>
+        </div>
+    </div>
+            <script>
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+
+                function drawPetal(radius, j) {
+                    // Pétalos más grandes usando valores más altos en las curvas de Bézier
+                    const controlPoint1 = radius * 0.45;  // Aumentamos para que el pétalo sea más ancho
+                    const controlPoint2 = radius * 1.5;  // Aumentamos para que el pétalo sea más largo
+                
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(controlPoint1, controlPoint1, controlPoint1, -controlPoint2, 0, -controlPoint2);
+                    ctx.bezierCurveTo(-controlPoint1, -controlPoint1, -controlPoint1, controlPoint1, 0, 0);
+                    ctx.strokeStyle = "#ffa216";
+                    ctx.stroke();
+                }
+
+                function drawLeaves() {
+                    ctx.strokeStyle = "#ffa216";
+                    ctx.lineWidth = 2;
+                
+                    for (let i = 0; i < 16; i++) {
+                        ctx.save();
+                        ctx.translate(250, 300);
+                        ctx.rotate(i * 24 * Math.PI / 180);
+                    
+                        for (let j = 0; j < 18; j++) {
+                            const radius = 150 - j * 6;
+                            drawPetal(radius, j);
+                        }
+                    
+                        ctx.restore();
+                    }
+                }
+            
+                function drawFlowerCenter() {
+                    const goldenAngle = 137.508;
+                    const phi = goldenAngle * (Math.PI / 180);
+                
+                    ctx.fillStyle = "#884513";
+                    for (let i = 0; i < 140; i++) {
+                        const r = 4 * Math.sqrt(i);
+                        const theta = i * phi;
+                        const x = 250 + r * Math.cos(theta);
+                        const y = 300 + r * Math.sin(theta);
+                    
+                        drawCircle(x, y, 5, "#884513", true);
+                    }
+                }
+            
+                function drawCircle(x, y, radius, color, fill = false) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                    if (fill) {
+                        ctx.fillStyle = color;
+                        ctx.fill();
+                    } else {
+                        ctx.strokeStyle = color;
+                        ctx.stroke();
+                    }
+                }
+            
+                function drawPoint(x, y) {
+                    drawCircle(x + 250, 300 - y, 4, "#ffa216", true);
+                }
+            
+                function drawT(x, y) {
+                    const positionsT = [
+                        [x, y + 30], [x + 6, y + 30], [x + 12, y + 30], [x + 18, y + 30], [x + 24, y + 30],
+                        [x + 12, y + 30], [x + 12, y + 24], [x + 12, y + 18], [x + 12, y + 12], [x + 12, y + 6], [x + 12, y]
+                    ];
+                    positionsT.forEach(([px, py]) => drawPoint(px, py));
+                }
+            
+                function drawU(x, y) {
+                    const positionsU = [
+                        [x, y + 30], [x, y + 24], [x, y + 18], [x, y + 12], [x, y + 6],
+                        [x + 3, y + 3], [x + 6, y], [x + 12, y - 1], [x + 18, y],
+                        [x + 21, y + 3], [x + 24, y + 6], [x + 24, y + 12], [x + 24, y + 18], [x + 24, y + 24],
+                        [x + 24, y + 30], [x + 12, y + 36], [x + 16, y + 40]
+                    ];
+                    positionsU.forEach(([px, py]) => drawPoint(px, py));
+                }
+            
+                function drawText() {
+                    drawT(-27, -20);
+                    drawU(7, -20);
+                }
+            
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawLeaves();
+                drawFlowerCenter();
+                drawText();
+            </script>
+        <footer></footer>
+    </body>
+</html>
+
+
